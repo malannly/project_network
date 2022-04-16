@@ -1,1 +1,51 @@
-<h1>Работает?</h1>
+{% extends 'base.html'%} <!--дополняем шаблон base.html-->
+{% load posts_extra %}
+{% block content %} <!--название переменной-->
+{% load static %}
+{{text|title|truncatewords:4|z:4|linebreaksbr}}
+{{time|date:"j d y Y m M F E"}}
+<div class="container mt-3">
+    <div class="card bg-light text-dark float-end" style="width:300px">
+    <h3>Важное объявление</h3>
+    <p>Продаём последние дома, отдаём вместе с ключами</p>
+      <img class="card-img-top" src="{% static 'posts/house.jpg' %}" alt="house" style="width:100%">
+      <div class="card-body">
+        <h5 class="card-title">всего 500 гектаров</h5>
+        <p class="card-text">От 40 млн, недорого</p>
+        <a href="" class="btn btn-primary">Купить</a>
+      </div>
+    </div>
+    <div class="card bg-light text-dark float-start" style="width:250px">
+        <h3>Социально-важно</h3>
+        <p>Набтраем участников в англоговорящий клуб</p>
+        <img class="card-img-top" src="{% static 'posts/for_group.jpeg' %}" alt="house" style="width:100%">
+        <div class="card-body">
+            <p class="card-text">Пройдите опрос и получите скидку</p>
+            <a href="" class="btn btn-primary">Перейти</a>
+        </div>
+    </div>
+</div>
+<ul>
+    {% for p in content %}
+        {% if forloop.first %} <!--поле, в котором лежит информация по текущей итерации-->
+            first
+        {% endif %}
+        <li>
+            <p>Author: {{ p.author.get_full_name }}</p>
+            <p>Publication date: {{ p.pub_date|date:'d E Y' }}</p>
+            <p>{{ p.text }}</p>
+            {% if p.group %}
+            <p><a href="{% url 'posts:group' p.group.slug %}">{{p.group.title}}</a></p>
+            {% endif %}
+            <hr>
+        </li>
+        {% if forloop.last %}
+            last
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}
+{% block title %}
+{{title}}
+{% endblock %}
+{% comment "заголовок страницы, заменяет блоки в базовом шаблоне" %}{% endcomment %}
